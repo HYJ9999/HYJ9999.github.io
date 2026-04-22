@@ -1,33 +1,41 @@
-/* 视频背景透明 */
-#page-header {
-    background: transparent !important;
-    background-image: none !important;
+/* 视频背景 - 全屏固定 */
+#video-background {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.4;
 }
 
-#page-header::before {
-    background: transparent !important;
+#video-background video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-#page-site-title {
-    text-shadow: 0 2px 8px rgba(0,0,0,0.5);
-}
-
-#site-title, #site-text {
-    color: #fff !important;
-}
-
-/* 导航栏透明 */
-#nav {
-    background: rgba(0,0,0,0.3) !important;
-    backdrop-filter: blur(10px);
-}
-
-/* 内容区域半透明 */
+/* 内容区域半透明，让视频透过来 */
 #content-inner {
-    background: rgba(255,255,255,0.9);
+    background: rgba(255,255,255,0.88);
 }
 
-/* 暗色模式下内容 */
 [data-theme="dark"] #content-inner {
     background: rgba(30,30,30,0.85);
+}
+
+/* 文章页面布局 */
+.post-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* 文章元信息居中 */
+#post-info {
+    text-align: center;
+}
+
+/* 标签居中显示 */
+.post-tags {
+    text-align: center;
 }
