@@ -1,8 +1,10 @@
 // 背景主题切换 + 透明度 + 玻璃效果
 (function() {
     var currentTheme = localStorage.getItem('bgTheme') || 'video';
-    var bgOpacity = parseFloat(localStorage.getItem('bgOpacity')) || 0.5;
-    var contentOpacity = parseFloat(localStorage.getItem('contentOpacity')) || 0.88;
+    var bgOpacity = parseFloat(localStorage.getItem('bgOpacity'));
+    if (isNaN(bgOpacity)) bgOpacity = 0.5;
+    var contentOpacity = parseFloat(localStorage.getItem('contentOpacity'));
+    if (isNaN(contentOpacity)) contentOpacity = 0.92;
     var glassEnabled = localStorage.getItem('bgGlass') !== 'false';
 
     function createBackground() {
@@ -31,14 +33,17 @@
             content.style.background = 'rgba(255,255,255,' + contentOpacity + ')';
             if (glassEnabled) {
                 content.style.backdropFilter = 'blur(5px)';
+            } else {
+                content.style.backdropFilter = 'none';
             }
         }
         var sidebar = document.getElementById('sidebar');
         if (sidebar) {
-            sidebar.style.background = glassEnabled ? 'rgba(255,255,255,' + contentOpacity + ')' : 'transparent';
             if (glassEnabled) {
+                sidebar.style.background = 'rgba(255,255,255,' + contentOpacity + ')';
                 sidebar.style.backdropFilter = 'blur(5px)';
             } else {
+                sidebar.style.background = 'transparent';
                 sidebar.style.backdropFilter = 'none';
             }
         }
@@ -48,26 +53,23 @@
         var panel = document.createElement('div');
         panel.id = 'bg-settings-panel';
         panel.style.cssText = 'display:none;position:fixed;top:60px;right:20px;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);padding:15px;border-radius:10px;z-index:1000;color:#fff;min-width:200px;box-shadow:0 4px 20px rgba(0,0,0,0.3);';
-        panel.innerHTML = `
-            <div style="margin-bottom:15px;font-weight:bold;font-size:14px;">背景设置</div>
-            <div style="margin-bottom:12px;">
-                <label style="display:block;margin-bottom:5px;font-size:12px;">背景透明度: <span id="bg-opacity-value">${Math.round(bgOpacity*100)}%</span></label>
-                <input type="range" id="bg-opacity-slider" min="10" max="100" value="${Math.round(bgOpacity*100)}" style="width:100%;cursor:pointer;">
-            </div>
-            <div style="margin-bottom:12px;">
-                <label style="display:block;margin-bottom:5px;font-size:12px;">内容透明度: <span id="content-opacity-value">${Math.round(contentOpacity*100)}%</span></label>
-                <input type="range" id="content-opacity-slider" min="50" max="100" value="${Math.round(contentOpacity*100)}" style="width:100%;cursor:pointer;">
-            </div>
-            <div>
-                <label style="display:flex;align-items:center;cursor:pointer;">
-                    <input type="checkbox" id="glass-toggle" ${glassEnabled ? 'checked' : ''} style="margin-right:8px;cursor:pointer;">
-                    <span style="font-size:12px;">开启玻璃效果</span>
-                </label>
-            </div>
-        `;
+        panel.innerHTML = '<div style="margin-bottom:15px;font-weight:bold;font-size:14px;">背景设置</div>' +
+            '<div style="margin-bottom:12px;">' +
+            '<label style="display:block;margin-bottom:5px;font-size:12px;">背景透明度: <span id="bg-opacity-value">' + Math.round(bgOpacity*100) + '%</span></label>' +
+            '<input type="range" id="bg-opacity-slider" min="10" max="100" value="' + Math.round(bgOpacity*100) + '" style="width:100%;cursor:pointer;">' +
+            '</div>' +
+            '<div style="margin-bottom:12px;">' +
+            '<label style="display:block;margin-bottom:5px;font-size:12px;">内容透明度: <span id="content-opacity-value">' + Math.round(contentOpacity*100) + '%</span></label>' +
+            '<input type="range" id="content-opacity-slider" min="50" max="100" value="' + Math.round(contentOpacity*100) + '" style="width:100%;cursor:pointer;">' +
+            '</div>' +
+            '<div>' +
+            '<label style="display:flex;align-items:center;cursor:pointer;">' +
+            '<input type="checkbox" id="glass-toggle"' + (glassEnabled ? ' checked' : '') + ' style="margin-right:8px;cursor:pointer;">' +
+            '<span style="font-size:12px;">开启玻璃效果</span>' +
+            '</label>' +
+            '</div>';
         document.body.appendChild(panel);
 
-        // 背景透明度滑块
         var bgSlider = panel.querySelector('#bg-opacity-slider');
         bgSlider.addEventListener('input', function() {
             bgOpacity = this.value / 100;
@@ -77,7 +79,6 @@
             if (media) media.style.opacity = bgOpacity;
         });
 
-        // 内容透明度滑块
         var contentSlider = panel.querySelector('#content-opacity-slider');
         contentSlider.addEventListener('input', function() {
             contentOpacity = this.value / 100;
@@ -86,7 +87,6 @@
             applyContentOpacity();
         });
 
-        // 玻璃效果开关
         var glassCheck = panel.querySelector('#glass-toggle');
         glassCheck.addEventListener('change', function() {
             glassEnabled = this.checked;
@@ -96,7 +96,6 @@
     }
 
     function createToggleButtons() {
-        // 设置按钮
         var settingsBtn = document.createElement('a');
         settingsBtn.className = 'site-page';
         settingsBtn.id = 'bg-settings-btn';
@@ -111,7 +110,6 @@
             }
         };
 
-        // 主题切换按钮
         var themeBtn = document.createElement('a');
         themeBtn.className = 'site-page';
         themeBtn.id = 'theme-toggle';
@@ -136,23 +134,18 @@
         var menus = document.querySelector('#menus .menus_items');
         if (menus) {
             var btns = createToggleButtons();
-
             var btn1 = document.createElement('div');
             btn1.className = 'menus_item';
             btn1.appendChild(btns.settingsBtn);
-
             var btn2 = document.createElement('div');
             btn2.className = 'menus_item';
             btn2.appendChild(btns.themeBtn);
-
             menus.appendChild(btn1);
             menus.appendChild(btn2);
         }
 
-        // 初始化内容透明度
         setTimeout(applyContentOpacity, 100);
 
-        // 点击其他地方关闭设置面板
         document.addEventListener('click', function(e) {
             if (!e.target.closest('#bg-settings-panel') && !e.target.closest('#bg-settings-btn')) {
                 var panel = document.getElementById('bg-settings-panel');
