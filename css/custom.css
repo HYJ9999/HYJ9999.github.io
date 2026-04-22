@@ -1,0 +1,33 @@
+/* 视频背景透明 */
+#page-header {
+    background: transparent !important;
+    background-image: none !important;
+}
+
+#page-header::before {
+    background: transparent !important;
+}
+
+#page-site-title {
+    text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+
+#site-title, #site-text {
+    color: #fff !important;
+}
+
+/* 导航栏透明 */
+#nav {
+    background: rgba(0,0,0,0.3) !important;
+    backdrop-filter: blur(10px);
+}
+
+/* 内容区域半透明 */
+#content-inner {
+    background: rgba(255,255,255,0.9);
+}
+
+/* 暗色模式下内容 */
+[data-theme="dark"] #content-inner {
+    background: rgba(30,30,30,0.85);
+}
