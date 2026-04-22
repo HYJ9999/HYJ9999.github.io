@@ -1,7 +1,8 @@
 // 背景主题切换 + 透明度 + 玻璃效果
 (function() {
     var currentTheme = localStorage.getItem('bgTheme') || 'video';
-    var opacity = parseFloat(localStorage.getItem('bgOpacity')) || 0.5;
+    var bgOpacity = parseFloat(localStorage.getItem('bgOpacity')) || 0.5;
+    var contentOpacity = parseFloat(localStorage.getItem('contentOpacity')) || 0.88;
     var glassEnabled = localStorage.getItem('bgGlass') !== 'false';
 
     function createBackground() {
@@ -19,20 +20,43 @@
 
         bg.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;';
         var media = bg.firstElementChild;
-        media.style.cssText = 'width:100%;height:100%;object-fit:cover;opacity:' + opacity + ';';
+        media.style.cssText = 'width:100%;height:100%;object-fit:cover;opacity:' + bgOpacity + ';';
 
         document.body.appendChild(bg);
+    }
+
+    function applyContentOpacity() {
+        var content = document.getElementById('content-inner');
+        if (content) {
+            content.style.background = 'rgba(255,255,255,' + contentOpacity + ')';
+            if (glassEnabled) {
+                content.style.backdropFilter = 'blur(5px)';
+            }
+        }
+        var sidebar = document.getElementById('sidebar');
+        if (sidebar) {
+            sidebar.style.background = glassEnabled ? 'rgba(255,255,255,' + contentOpacity + ')' : 'transparent';
+            if (glassEnabled) {
+                sidebar.style.backdropFilter = 'blur(5px)';
+            } else {
+                sidebar.style.backdropFilter = 'none';
+            }
+        }
     }
 
     function createSettingsPanel() {
         var panel = document.createElement('div');
         panel.id = 'bg-settings-panel';
-        panel.style.cssText = 'display:none;position:fixed;top:60px;right:20px;background:rgba(0,0,0,0.8);backdrop-filter:blur(10px);padding:15px;border-radius:10px;z-index:1000;color:#fff;min-width:180px;';
+        panel.style.cssText = 'display:none;position:fixed;top:60px;right:20px;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);padding:15px;border-radius:10px;z-index:1000;color:#fff;min-width:200px;box-shadow:0 4px 20px rgba(0,0,0,0.3);';
         panel.innerHTML = `
-            <div style="margin-bottom:10px;font-weight:bold;">背景设置</div>
-            <div style="margin-bottom:10px;">
-                <label style="display:block;margin-bottom:5px;font-size:12px;">透明度: <span id="opacity-value">${Math.round(opacity*100)}%</span></label>
-                <input type="range" id="opacity-slider" min="10" max="100" value="${Math.round(opacity*100)}" style="width:100%;cursor:pointer;">
+            <div style="margin-bottom:15px;font-weight:bold;font-size:14px;">背景设置</div>
+            <div style="margin-bottom:12px;">
+                <label style="display:block;margin-bottom:5px;font-size:12px;">背景透明度: <span id="bg-opacity-value">${Math.round(bgOpacity*100)}%</span></label>
+                <input type="range" id="bg-opacity-slider" min="10" max="100" value="${Math.round(bgOpacity*100)}" style="width:100%;cursor:pointer;">
+            </div>
+            <div style="margin-bottom:12px;">
+                <label style="display:block;margin-bottom:5px;font-size:12px;">内容透明度: <span id="content-opacity-value">${Math.round(contentOpacity*100)}%</span></label>
+                <input type="range" id="content-opacity-slider" min="50" max="100" value="${Math.round(contentOpacity*100)}" style="width:100%;cursor:pointer;">
             </div>
             <div>
                 <label style="display:flex;align-items:center;cursor:pointer;">
@@ -43,14 +67,23 @@
         `;
         document.body.appendChild(panel);
 
-        // 透明度滑块
-        var slider = panel.querySelector('#opacity-slider');
-        slider.addEventListener('input', function() {
-            opacity = this.value / 100;
-            localStorage.setItem('bgOpacity', opacity);
-            document.getElementById('opacity-value').textContent = this.value + '%';
+        // 背景透明度滑块
+        var bgSlider = panel.querySelector('#bg-opacity-slider');
+        bgSlider.addEventListener('input', function() {
+            bgOpacity = this.value / 100;
+            localStorage.setItem('bgOpacity', bgOpacity);
+            document.getElementById('bg-opacity-value').textContent = this.value + '%';
             var media = document.querySelector('#custom-background video, #custom-background img');
-            if (media) media.style.opacity = opacity;
+            if (media) media.style.opacity = bgOpacity;
+        });
+
+        // 内容透明度滑块
+        var contentSlider = panel.querySelector('#content-opacity-slider');
+        contentSlider.addEventListener('input', function() {
+            contentOpacity = this.value / 100;
+            localStorage.setItem('contentOpacity', contentOpacity);
+            document.getElementById('content-opacity-value').textContent = this.value + '%';
+            applyContentOpacity();
         });
 
         // 玻璃效果开关
@@ -58,21 +91,8 @@
         glassCheck.addEventListener('change', function() {
             glassEnabled = this.checked;
             localStorage.setItem('bgGlass', glassEnabled);
-            applyGlassEffect();
+            applyContentOpacity();
         });
-    }
-
-    function applyGlassEffect() {
-        var content = document.getElementById('content-inner');
-        if (content) {
-            content.style.background = glassEnabled ? 'rgba(255,255,255,0.75)' : 'rgba(255,255,255,0.92)';
-            content.style.backdropFilter = glassEnabled ? 'blur(5px)' : 'none';
-        }
-        var sidebar = document.getElementById('sidebar');
-        if (sidebar && glassEnabled) {
-            sidebar.style.background = 'rgba(255,255,255,0.75)';
-            sidebar.style.backdropFilter = 'blur(5px)';
-        }
     }
 
     function createToggleButtons() {
@@ -129,10 +149,8 @@
             menus.appendChild(btn2);
         }
 
-        // 初始化玻璃效果
-        if (glassEnabled) {
-            setTimeout(applyGlassEffect, 100);
-        }
+        // 初始化内容透明度
+        setTimeout(applyContentOpacity, 100);
 
         // 点击其他地方关闭设置面板
         document.addEventListener('click', function(e) {
