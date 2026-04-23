@@ -24,11 +24,16 @@
 
 /* 文章页元信息和正文分层显示（仅无顶部图模式） */
 #post > #post-info {
-    margin-bottom: 20px;
-    padding: 14px 18px;
+    margin-bottom: 12px;
+    padding: 8px 12px;
     background: var(--card-bg);
     border: 1px solid var(--light-grey);
     border-radius: 8px;
+}
+
+/* 顶图模式下的文章元信息块也紧凑一些 */
+#page-header #post-info > * {
+    padding: 0 10px !important;
 }
 
 @media screen and (max-width: 768px) {
