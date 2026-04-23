@@ -1,7 +1,7 @@
-/* 文章内容区域透明度 - 不影响顶部信息 */
+/* 文章内容区域透明度 - 默认较透明以便看到背景 */
 #article-container,
 .post-content {
-    background: rgba(255,255,255,0.95) !important;
+    background: rgba(255,255,255,0.3);
 }
 
 /* 移除文章容器的额外样式让它铺满 */
@@ -13,12 +13,12 @@
 
 /* 侧边栏保持一致透明度 */
 #sidebar {
-    background: rgba(255,255,255,0.92) !important;
+    background: rgba(255,255,255,0.92);
 }
 
 /* 内容区域 */
 #content-inner {
-    background: rgba(255,255,255,0.92) !important;
+    background: rgba(255,255,255,0.92);
 }
 
 /* 确保首页背景正确 */

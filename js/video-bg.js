@@ -57,7 +57,7 @@
         var posts = document.querySelectorAll(selectors);
         var color = 'rgba(255,255,255,' + postOpacity + ')';
         posts.forEach(function(post) {
-            post.style.setProperty('background', color, 'important');
+            post.style.background = color;
             if (glassEnabled && postOpacity < 1) {
                 post.style.backdropFilter = 'blur(3px)';
             } else {
@@ -73,7 +73,7 @@
         panel.innerHTML = '<div style="margin-bottom:15px;font-weight:bold;font-size:14px;">背景设置</div>' +
             '<div style="margin-bottom:12px;">' +
             '<label style="display:block;margin-bottom:5px;font-size:12px;">背景透明度: <span id="bg-opacity-value">' + Math.round(bgOpacity*100) + '%</span></label>' +
-            '<input type="range" id="bg-opacity-slider" min="10" max="100" value="' + Math.round(bgOpacity*100) + '" style="width:100%;cursor:pointer;">' +
+            '<input type="range" id="bg-opacity-slider" min="0" max="100" value="' + Math.round(bgOpacity*100) + '" style="width:100%;cursor:pointer;">' +
             '</div>' +
             '<div style="margin-bottom:12px;">' +
             '<label style="display:block;margin-bottom:5px;font-size:12px;">内容透明度: <span id="content-opacity-value">' + Math.round(contentOpacity*100) + '%</span></label>' +
