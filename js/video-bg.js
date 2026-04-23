@@ -5,6 +5,8 @@
     if (isNaN(bgOpacity)) bgOpacity = 0.5;
     var contentOpacity = parseFloat(localStorage.getItem('contentOpacity'));
     if (isNaN(contentOpacity)) contentOpacity = 0.92;
+    var postOpacity = parseFloat(localStorage.getItem('postOpacity'));
+    if (isNaN(postOpacity)) postOpacity = 1.0;
     var glassEnabled = localStorage.getItem('bgGlass') !== 'false';
 
     function createBackground() {
@@ -49,10 +51,22 @@
         }
     }
 
+    function applyPostOpacity() {
+        var posts = document.querySelectorAll('.post-content, .article-content, .post-body');
+        posts.forEach(function(post) {
+            post.style.background = 'rgba(255,255,255,' + postOpacity + ')';
+            if (glassEnabled && postOpacity < 1) {
+                post.style.backdropFilter = 'blur(3px)';
+            } else {
+                post.style.backdropFilter = 'none';
+            }
+        });
+    }
+
     function createSettingsPanel() {
         var panel = document.createElement('div');
         panel.id = 'bg-settings-panel';
-        panel.style.cssText = 'display:none;position:fixed;top:60px;right:20px;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);padding:15px;border-radius:10px;z-index:1000;color:#fff;min-width:200px;box-shadow:0 4px 20px rgba(0,0,0,0.3);';
+        panel.style.cssText = 'display:none;position:fixed;top:60px;right:20px;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);padding:15px;border-radius:10px;z-index:1000;color:#fff;min-width:220px;box-shadow:0 4px 20px rgba(0,0,0,0.3);';
         panel.innerHTML = '<div style="margin-bottom:15px;font-weight:bold;font-size:14px;">背景设置</div>' +
             '<div style="margin-bottom:12px;">' +
             '<label style="display:block;margin-bottom:5px;font-size:12px;">背景透明度: <span id="bg-opacity-value">' + Math.round(bgOpacity*100) + '%</span></label>' +
@@ -60,7 +74,11 @@
             '</div>' +
             '<div style="margin-bottom:12px;">' +
             '<label style="display:block;margin-bottom:5px;font-size:12px;">内容透明度: <span id="content-opacity-value">' + Math.round(contentOpacity*100) + '%</span></label>' +
-            '<input type="range" id="content-opacity-slider" min="50" max="100" value="' + Math.round(contentOpacity*100) + '" style="width:100%;cursor:pointer;">' +
+            '<input type="range" id="content-opacity-slider" min="30" max="100" value="' + Math.round(contentOpacity*100) + '" style="width:100%;cursor:pointer;">' +
+            '</div>' +
+            '<div style="margin-bottom:12px;">' +
+            '<label style="display:block;margin-bottom:5px;font-size:12px;">文章透明度: <span id="post-opacity-value">' + Math.round(postOpacity*100) + '%</span></label>' +
+            '<input type="range" id="post-opacity-slider" min="50" max="100" value="' + Math.round(postOpacity*100) + '" style="width:100%;cursor:pointer;">' +
             '</div>' +
             '<div>' +
             '<label style="display:flex;align-items:center;cursor:pointer;">' +
@@ -87,11 +105,20 @@
             applyContentOpacity();
         });
 
+        var postSlider = panel.querySelector('#post-opacity-slider');
+        postSlider.addEventListener('input', function() {
+            postOpacity = this.value / 100;
+            localStorage.setItem('postOpacity', postOpacity);
+            document.getElementById('post-opacity-value').textContent = this.value + '%';
+            applyPostOpacity();
+        });
+
         var glassCheck = panel.querySelector('#glass-toggle');
         glassCheck.addEventListener('change', function() {
             glassEnabled = this.checked;
             localStorage.setItem('bgGlass', glassEnabled);
             applyContentOpacity();
+            applyPostOpacity();
         });
     }
 
@@ -144,7 +171,10 @@
             menus.appendChild(btn2);
         }
 
-        setTimeout(applyContentOpacity, 100);
+        setTimeout(function() {
+            applyContentOpacity();
+            applyPostOpacity();
+        }, 100);
 
         document.addEventListener('click', function(e) {
             if (!e.target.closest('#bg-settings-panel') && !e.target.closest('#bg-settings-btn')) {
