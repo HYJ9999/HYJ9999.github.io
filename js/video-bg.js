@@ -52,16 +52,23 @@
     }
 
     function applyPostOpacity() {
-        var selectors = '#article-container, .post-content, .post-bg, #post, #post .layout';
+        var selectors = '#article-container, .post-content, .post-bg, #post, #post > .layout';
         var posts = document.querySelectorAll(selectors);
+        var color = 'rgba(255,255,255,' + postOpacity + ')';
         posts.forEach(function(post) {
-            post.style.background = 'rgba(255,255,255,' + postOpacity + ')';
+            post.style.setProperty('background', color, 'important');
             if (glassEnabled && postOpacity < 1) {
                 post.style.backdropFilter = 'blur(3px)';
             } else {
                 post.style.backdropFilter = 'none';
             }
         });
+
+        // 同时更新 content-inner
+        var content = document.getElementById('content-inner');
+        if (content) {
+            content.style.background = 'rgba(255,255,255,' + contentOpacity + ')';
+        }
     }
 
     function createSettingsPanel() {

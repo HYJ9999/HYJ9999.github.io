@@ -1,11 +1,25 @@
-/* 文章内容铺满容器 */
-#article-container, .post-content, #post {
-    width: 100%;
-    height: 100%;
+/* 文章内容区域透明度 */
+#article-container,
+.post-content,
+.post-bg,
+#post,
+#post .layout {
+    background: rgba(255,255,255,0.95) !important;
 }
 
-/* 移除文章容器的圆角和内边距让内容铺满 */
+/* 移除文章容器的额外样式让它铺满 */
 .post-content {
     padding: 0 !important;
     border-radius: 0 !important;
+    width: 100% !important;
+}
+
+/* 侧边栏也保持一致透明度 */
+#sidebar {
+    background: rgba(255,255,255,0.92) !important;
+}
+
+/* 内容区域 */
+#content-inner {
+    background: rgba(255,255,255,0.92) !important;
 }
