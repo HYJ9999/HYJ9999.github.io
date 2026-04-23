@@ -3,6 +3,32 @@
     var theme = localStorage.getItem('bgTheme') || 'video';
     var opacity = parseFloat(localStorage.getItem('bgOpacity'));
     if (isNaN(opacity)) opacity = 0.5;
+    var opacitySteps = [0.3, 0.5, 0.7, 0.9];
+
+    function getBackgroundMedia() {
+        var wrap = document.getElementById('custom-background');
+        return wrap ? wrap.firstElementChild : null;
+    }
+
+    function clampOpacity(value) {
+        if (isNaN(value)) return 0.5;
+        return Math.min(1, Math.max(0.1, value));
+    }
+
+    function setOpacity(nextOpacity) {
+        opacity = clampOpacity(nextOpacity);
+        localStorage.setItem('bgOpacity', opacity.toString());
+        var media = getBackgroundMedia();
+        if (media) media.style.opacity = opacity;
+    }
+
+    function getNextOpacityStep() {
+        var current = clampOpacity(opacity);
+        for (var i = 0; i < opacitySteps.length; i++) {
+            if (opacitySteps[i] > current + 0.001) return opacitySteps[i];
+        }
+        return opacitySteps[0];
+    }
 
     function injectRuntimeStyle() {
         if (document.getElementById('bg-runtime-style')) return;
@@ -127,17 +153,53 @@
         };
     }
 
+    function upsertOpacityButton() {
+        var menus = document.querySelector('#menus .menus_items');
+        if (!menus) return;
+
+        var item = document.getElementById('bg-opacity-toggle-item');
+        if (!item) {
+            item = document.createElement('div');
+            item.className = 'menus_item';
+            item.id = 'bg-opacity-toggle-item';
+
+            var btn = document.createElement('a');
+            btn.className = 'site-page';
+            btn.id = 'bg-opacity-toggle';
+            btn.href = 'javascript:void(0)';
+            btn.title = '切换透明度';
+            item.appendChild(btn);
+            menus.appendChild(item);
+        }
+
+        var toggle = item.querySelector('#bg-opacity-toggle');
+        if (!toggle) return;
+
+        function renderOpacity() {
+            var percent = Math.round(clampOpacity(opacity) * 100);
+            toggle.innerHTML = '<i class="fas fa-adjust"></i><span> 透明度 ' + percent + '%</span>';
+        }
+
+        renderOpacity();
+        toggle.onclick = function () {
+            setOpacity(getNextOpacityStep());
+            renderOpacity();
+        };
+    }
+
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', function () {
             injectRuntimeStyle();
             mountBackground();
             upsertThemeToggleButton();
+            upsertOpacityButton();
             forceHomeHeaderTransparent();
         });
     } else {
         injectRuntimeStyle();
         mountBackground();
         upsertThemeToggleButton();
+        upsertOpacityButton();
         forceHomeHeaderTransparent();
     }
 
