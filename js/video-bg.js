@@ -156,6 +156,45 @@
     function applyNavTheme() {
         if (!document.body) return;
         document.body.setAttribute('data-bg-theme', theme);
+
+        var nav = document.querySelector('#page-header #nav');
+        if (!nav) return;
+
+        var config = theme === 'image'
+            ? {
+                bg: 'linear-gradient(90deg, rgba(255, 236, 245, 0.92), rgba(233, 245, 255, 0.92))',
+                border: '1px solid rgba(255, 255, 255, 0.7)',
+                text: '#3b4754',
+                hover: '#2f6db0',
+                blur: 'blur(10px)'
+            }
+            : {
+                bg: 'rgba(13, 23, 36, 0.42)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                text: '#f4f9ff',
+                hover: '#ffffff',
+                blur: 'blur(8px)'
+            };
+
+        nav.style.setProperty('background', config.bg, 'important');
+        nav.style.setProperty('border-bottom', config.border, 'important');
+        nav.style.setProperty('backdrop-filter', config.blur, 'important');
+
+        nav.querySelectorAll('a, .site-page, #toggle-menu').forEach(function (el) {
+            el.style.setProperty('color', config.text, 'important');
+        });
+
+        var siteName = nav.querySelector('#blog-info .site-name');
+        if (siteName) siteName.style.setProperty('color', config.text, 'important');
+
+        nav.querySelectorAll('a, .site-page, #toggle-menu').forEach(function (el) {
+            el.onmouseenter = function () {
+                el.style.setProperty('color', config.hover, 'important');
+            };
+            el.onmouseleave = function () {
+                el.style.setProperty('color', config.text, 'important');
+            };
+        });
     }
 
     function forceHomeHeaderTransparent() {
