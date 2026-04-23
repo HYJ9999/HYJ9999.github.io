@@ -35,6 +35,8 @@
             '#recent-posts .recent-post-item',
             '#aside-content .card-widget',
             '#post',
+            '#article-container',
+            '#post #article-container',
             '#page',
             '#archive',
             '#tag',
@@ -90,6 +92,27 @@
             '  background-color: transparent !important;',
             '  content: none !important;',
             '}',
+            'body[data-bg-theme="video"] #page-header #nav {',
+            '  background: rgba(13, 23, 36, 0.42) !important;',
+            '  backdrop-filter: blur(8px);',
+            '  border-bottom: 1px solid rgba(255, 255, 255, 0.2);',
+            '}',
+            'body[data-bg-theme="video"] #page-header #nav .site-page,',
+            'body[data-bg-theme="video"] #page-header #nav #blog-info .site-name {',
+            '  color: #f4f9ff !important;',
+            '}',
+            'body[data-bg-theme="image"] #page-header #nav {',
+            '  background: linear-gradient(90deg, rgba(255, 236, 245, 0.92), rgba(233, 245, 255, 0.92)) !important;',
+            '  backdrop-filter: blur(10px);',
+            '  border-bottom: 1px solid rgba(255, 255, 255, 0.7);',
+            '}',
+            'body[data-bg-theme="image"] #page-header #nav .site-page,',
+            'body[data-bg-theme="image"] #page-header #nav #blog-info .site-name {',
+            '  color: #3b4754 !important;',
+            '}',
+            'body[data-bg-theme="image"] #page-header #nav .site-page:hover {',
+            '  color: #2f6db0 !important;',
+            '}',
             '.bg-opacity-toggle-item {',
             '  position: relative;',
             '}',
@@ -128,6 +151,11 @@
             '}'
         ].join('\n');
         document.head.appendChild(style);
+    }
+
+    function applyNavTheme() {
+        if (!document.body) return;
+        document.body.setAttribute('data-bg-theme', theme);
     }
 
     function forceHomeHeaderTransparent() {
@@ -187,6 +215,7 @@
         wrap.appendChild(media);
         document.body.appendChild(wrap);
         injectRuntimeStyle();
+        applyNavTheme();
         forceHomeHeaderTransparent();
         applyPanelOpacity();
     }
