@@ -240,7 +240,7 @@
             '  animation: post-info-wave-body 4.6s ease-in-out infinite;',
             '}',
             '#page-header #post-info::after {',
-            '  content: "";',
+            '  content: none;',
             '  position: absolute;',
             '  left: -9%;',
             '  right: -9%;',
