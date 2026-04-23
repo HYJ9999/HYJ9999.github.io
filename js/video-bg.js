@@ -10,6 +10,10 @@
         return wrap ? wrap.firstElementChild : null;
     }
 
+    function getMenuContainers() {
+        return document.querySelectorAll('#menus .menus_items, #sidebar-menus .menus_items');
+    }
+
     function clampOpacity(value) {
         if (isNaN(value)) return 0.5;
         return Math.min(1, Math.max(0.1, value));
@@ -117,74 +121,72 @@
     }
 
     function upsertThemeToggleButton() {
-        var menus = document.querySelector('#menus .menus_items');
-        if (!menus) return;
-
-        var item = document.getElementById('bg-theme-toggle-item');
-        if (!item) {
-            item = document.createElement('div');
-            item.className = 'menus_item';
-            item.id = 'bg-theme-toggle-item';
-
-            var btn = document.createElement('a');
-            btn.className = 'site-page';
-            btn.id = 'bg-theme-toggle';
-            btn.href = 'javascript:void(0)';
-            btn.title = '切换背景';
-            item.appendChild(btn);
-            menus.appendChild(item);
-        }
-
-        var toggle = item.querySelector('#bg-theme-toggle');
-        if (!toggle) return;
-
         function renderIcon() {
-            toggle.innerHTML = theme === 'video'
+            return theme === 'video'
                 ? '<i class="fas fa-image"></i><span> 图片</span>'
                 : '<i class="fas fa-video"></i><span> 视频</span>';
         }
 
-        renderIcon();
-        toggle.onclick = function () {
-            theme = theme === 'video' ? 'image' : 'video';
-            localStorage.setItem('bgTheme', theme);
-            mountBackground();
-            renderIcon();
-        };
+        var menusList = getMenuContainers();
+        if (!menusList.length) return;
+
+        menusList.forEach(function (menus) {
+            var item = menus.querySelector('.bg-theme-toggle-item');
+            if (!item) {
+                item = document.createElement('div');
+                item.className = 'menus_item bg-theme-toggle-item';
+
+                var btn = document.createElement('a');
+                btn.className = 'site-page bg-theme-toggle';
+                btn.href = 'javascript:void(0)';
+                btn.title = '切换背景';
+                item.appendChild(btn);
+                menus.appendChild(item);
+            }
+
+            var toggle = item.querySelector('.bg-theme-toggle');
+            if (!toggle) return;
+            toggle.innerHTML = renderIcon();
+            toggle.onclick = function () {
+                theme = theme === 'video' ? 'image' : 'video';
+                localStorage.setItem('bgTheme', theme);
+                mountBackground();
+                upsertThemeToggleButton();
+            };
+        });
     }
 
     function upsertOpacityButton() {
-        var menus = document.querySelector('#menus .menus_items');
-        if (!menus) return;
-
-        var item = document.getElementById('bg-opacity-toggle-item');
-        if (!item) {
-            item = document.createElement('div');
-            item.className = 'menus_item';
-            item.id = 'bg-opacity-toggle-item';
-
-            var btn = document.createElement('a');
-            btn.className = 'site-page';
-            btn.id = 'bg-opacity-toggle';
-            btn.href = 'javascript:void(0)';
-            btn.title = '切换透明度';
-            item.appendChild(btn);
-            menus.appendChild(item);
-        }
-
-        var toggle = item.querySelector('#bg-opacity-toggle');
-        if (!toggle) return;
-
         function renderOpacity() {
             var percent = Math.round(clampOpacity(opacity) * 100);
-            toggle.innerHTML = '<i class="fas fa-adjust"></i><span> 透明度 ' + percent + '%</span>';
+            return '<i class="fas fa-adjust"></i><span> 透明度 ' + percent + '%</span>';
         }
 
-        renderOpacity();
-        toggle.onclick = function () {
-            setOpacity(getNextOpacityStep());
-            renderOpacity();
-        };
+        var menusList = getMenuContainers();
+        if (!menusList.length) return;
+
+        menusList.forEach(function (menus) {
+            var item = menus.querySelector('.bg-opacity-toggle-item');
+            if (!item) {
+                item = document.createElement('div');
+                item.className = 'menus_item bg-opacity-toggle-item';
+
+                var btn = document.createElement('a');
+                btn.className = 'site-page bg-opacity-toggle';
+                btn.href = 'javascript:void(0)';
+                btn.title = '切换透明度';
+                item.appendChild(btn);
+                menus.appendChild(item);
+            }
+
+            var toggle = item.querySelector('.bg-opacity-toggle');
+            if (!toggle) return;
+            toggle.innerHTML = renderOpacity();
+            toggle.onclick = function () {
+                setOpacity(getNextOpacityStep());
+                upsertOpacityButton();
+            };
+        });
     }
 
     if (document.readyState === 'loading') {
