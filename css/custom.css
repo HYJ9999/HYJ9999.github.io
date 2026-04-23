@@ -11,12 +11,28 @@
     color: #666 !important;
 }
 
-/* 内容区域透明度由JS控制 */
-#content-inner {
-    background: rgba(255,255,255,0.95);
+/* 恢复首页封面回拉效果 */
+#page-header.full_page {
+    background-attachment: fixed !important;
 }
 
-/* 侧边栏 */
-#sidebar {
-    background: rgba(255,255,255,0.95);
+/* 避免文章正文被透明度脚本污染 */
+#article-container {
+    background: var(--card-bg) !important;
+    backdrop-filter: none !important;
+}
+
+/* 文章页元信息和正文分层显示（仅无顶部图模式） */
+#post > #post-info {
+    margin-bottom: 20px;
+    padding: 14px 18px;
+    background: var(--card-bg);
+    border: 1px solid var(--light-grey);
+    border-radius: 8px;
+}
+
+@media screen and (max-width: 768px) {
+    #page-header.full_page {
+        background-attachment: scroll !important;
+    }
 }
