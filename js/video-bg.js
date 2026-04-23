@@ -52,7 +52,7 @@
     }
 
     function applyPostOpacity() {
-        var posts = document.querySelectorAll('.post-content, .post-bg, #post');
+        var posts = document.querySelectorAll('#article-container, .post-content, .post-bg, #post');
         posts.forEach(function(post) {
             post.style.background = 'rgba(255,255,255,' + postOpacity + ')';
             if (glassEnabled && postOpacity < 1) {
@@ -74,7 +74,7 @@
             '</div>' +
             '<div style="margin-bottom:12px;">' +
             '<label style="display:block;margin-bottom:5px;font-size:12px;">内容透明度: <span id="content-opacity-value">' + Math.round(contentOpacity*100) + '%</span></label>' +
-            '<input type="range" id="content-opacity-slider" min="30" max="100" value="' + Math.round(contentOpacity*100) + '" style="width:100%;cursor:pointer;">' +
+            '<input type="range" id="content-opacity-slider" min="0" max="100" value="' + Math.round(contentOpacity*100) + '" style="width:100%;cursor:pointer;">' +
             '</div>' +
             '<div style="margin-bottom:12px;">' +
             '<label style="display:block;margin-bottom:5px;font-size:12px;">文章透明度: <span id="post-opacity-value">' + Math.round(postOpacity*100) + '%</span></label>' +
