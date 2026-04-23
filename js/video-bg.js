@@ -52,7 +52,7 @@
     }
 
     function applyPostOpacity() {
-        var posts = document.querySelectorAll('.post-content, .article-content, .post-body');
+        var posts = document.querySelectorAll('.post-content, .post-bg, #post');
         posts.forEach(function(post) {
             post.style.background = 'rgba(255,255,255,' + postOpacity + ')';
             if (glassEnabled && postOpacity < 1) {
