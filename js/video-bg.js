@@ -360,7 +360,7 @@
                 '</div>',
                 '<div class="bg-opacity-panel-row">',
                 '  <span class="bg-opacity-label">白板</span>',
-                '  <input class="panel-opacity-range" type="range" min="50" max="100" step="1">',
+                '  <input class="panel-opacity-range" type="range" min="10" max="100" step="1">',
                 '  <span class="panel-opacity-value"></span>',
                 '</div>'
             ].join('');
