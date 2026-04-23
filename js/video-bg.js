@@ -39,7 +39,6 @@
             '#archive',
             '#tag',
             '#category',
-            '#post > #post-info',
             '#post .post-copyright',
             '#post .tag_share',
             '#post #pagination'
@@ -50,6 +49,12 @@
                 el.style.setProperty('background', color, 'important');
                 el.style.setProperty('background-color', color, 'important');
             });
+        });
+
+        // 元信息区域保持主题原样，不叠加灰色蒙板
+        document.querySelectorAll('#post > #post-info, #page-header #post-info').forEach(function (el) {
+            el.style.removeProperty('background');
+            el.style.removeProperty('background-color');
         });
     }
 
@@ -261,7 +266,15 @@
                 btn.href = 'javascript:void(0)';
                 btn.title = '切换透明度';
                 item.appendChild(btn);
-                menus.appendChild(item);
+                var themeItem = menus.querySelector('.bg-theme-toggle-item');
+                if (themeItem) menus.insertBefore(item, themeItem);
+                else menus.appendChild(item);
+            }
+
+            // 已存在时也强制保证顺序：透明度按钮在主题按钮之前
+            var currentThemeItem = menus.querySelector('.bg-theme-toggle-item');
+            if (currentThemeItem && item.nextElementSibling !== currentThemeItem) {
+                menus.insertBefore(item, currentThemeItem);
             }
 
             var toggle = item.querySelector('.bg-opacity-toggle');
