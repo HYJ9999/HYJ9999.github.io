@@ -193,7 +193,7 @@
             '}',
             '@media screen and (max-width: 768px) {',
             '  #page-header.full_page { background-attachment: scroll !important; }',
-            '  .bg-opacity-panel { left: auto; right: 0; }',
+            '  .bg-opacity-panel { left: auto; right: 12px; }',
             '}'
         ].join('\n');
         document.head.appendChild(style);
