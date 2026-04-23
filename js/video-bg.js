@@ -6,7 +6,7 @@
     var contentOpacity = parseFloat(localStorage.getItem('contentOpacity'));
     if (isNaN(contentOpacity)) contentOpacity = 0.92;
     var postOpacity = parseFloat(localStorage.getItem('postOpacity'));
-    if (isNaN(postOpacity)) postOpacity = 1.0;
+    if (isNaN(postOpacity)) postOpacity = 0.95;
     var glassEnabled = localStorage.getItem('bgGlass') !== 'false';
 
     function createBackground() {
@@ -78,7 +78,7 @@
             '</div>' +
             '<div style="margin-bottom:12px;">' +
             '<label style="display:block;margin-bottom:5px;font-size:12px;">文章透明度: <span id="post-opacity-value">' + Math.round(postOpacity*100) + '%</span></label>' +
-            '<input type="range" id="post-opacity-slider" min="50" max="100" value="' + Math.round(postOpacity*100) + '" style="width:100%;cursor:pointer;">' +
+            '<input type="range" id="post-opacity-slider" min="0" max="100" value="' + Math.round(postOpacity*100) + '" style="width:100%;cursor:pointer;">' +
             '</div>' +
             '<div>' +
             '<label style="display:flex;align-items:center;cursor:pointer;">' +
