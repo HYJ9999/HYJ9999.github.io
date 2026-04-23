@@ -1,9 +1,6 @@
-/* 文章内容区域透明度 */
+/* 文章内容区域透明度 - 不影响顶部信息 */
 #article-container,
-.post-content,
-.post-bg,
-#post,
-#post .layout {
+.post-content {
     background: rgba(255,255,255,0.95) !important;
 }
 
@@ -14,7 +11,7 @@
     width: 100% !important;
 }
 
-/* 侧边栏也保持一致透明度 */
+/* 侧边栏保持一致透明度 */
 #sidebar {
     background: rgba(255,255,255,0.92) !important;
 }
@@ -22,4 +19,16 @@
 /* 内容区域 */
 #content-inner {
     background: rgba(255,255,255,0.92) !important;
+}
+
+/* 确保首页背景正确 */
+#page-header {
+    background: transparent !important;
+}
+
+/* 顶部信息区域不受影响 */
+#post-info,
+.post-meta,
+.article-meta {
+    background: transparent !important;
 }

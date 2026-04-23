@@ -52,7 +52,8 @@
     }
 
     function applyPostOpacity() {
-        var selectors = '#article-container, .post-content, .post-bg, #post, #post > .layout';
+        // 只影响文章内容区域，不影响顶部信息
+        var selectors = '#article-container, .post-content';
         var posts = document.querySelectorAll(selectors);
         var color = 'rgba(255,255,255,' + postOpacity + ')';
         posts.forEach(function(post) {
@@ -63,12 +64,6 @@
                 post.style.backdropFilter = 'none';
             }
         });
-
-        // 同时更新 content-inner
-        var content = document.getElementById('content-inner');
-        if (content) {
-            content.style.background = 'rgba(255,255,255,' + contentOpacity + ')';
-        }
     }
 
     function createSettingsPanel() {
